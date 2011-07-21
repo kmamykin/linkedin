@@ -24,9 +24,9 @@ module LinkedIn
           fields = options[:fields] || LinkedIn.default_profile_fields
 
           if options[:public]
-            path +=":public"
+            path += ":public"
           elsif fields
-            path +=":(#{fields.map{ |f| f.to_s.gsub("_","-") }.join(',')})"
+            path += field_selector(fields)
           end
 
           Mash.from_json(get(path))
@@ -37,7 +37,7 @@ module LinkedIn
           if options[:id]
             path += "id=#{options[:id]}"
           elsif options[:url]
-            path += "url=#{CGI.escape(options[:url])}"
+            path += "url=#{sanatize_value(options[:url])}"
           else
             path += "~"
           end
